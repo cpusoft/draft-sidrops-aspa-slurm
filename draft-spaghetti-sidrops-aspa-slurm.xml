@@ -162,8 +162,9 @@
 <![CDATA[
 "aspaFilter": [
   {
-    "customer_asid": 64496,
+    "customerAsid": 64496,
     "afi": "ipv6",
+    "prividerAsSet":[64495]
     "comment": "Ignore ASPA(s) that have 64496 as Customer ASID"
   }
 ]
@@ -195,9 +196,9 @@
 <![CDATA[
 "aspaAssertions": [
   {
-    "customer_asid": 64496,
+    "customerAsId": 64496,
     "afi": "ipv6",
-    "provider_set": [64497, 64498],
+    "providerAsSet": [64497, 64498],
     "comment": "pretend 64497 are 64498 are providers to 64496 for IPv6 routes"
   }
 ]
@@ -250,8 +251,9 @@
     ],
     "aspaFilters": [
       {
-        "customer_asid": 64496,
+        "customerAsId": 64496,
         "afi": "ipv6",
+        "prividerAsSet":[64495]
         "comment": "ASPAs matching Customer ASID"
       }
     ]
@@ -280,9 +282,9 @@
     ],
     "aspaAssertions": [
       {
-        "customer_asid": 64496,
+        "customerAsId": 64496,
         "afi": "ipv6",
-        "provider_set": [64497, 64498],
+        "providerAsSet": [64497, 64498],
         "comment": "Pretend 64497 and 64498 are upstream for 64496 in the IPv6 AFI"
       }
     ]
