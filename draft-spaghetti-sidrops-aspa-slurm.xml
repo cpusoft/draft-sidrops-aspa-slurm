@@ -45,6 +45,20 @@
       <email>ben@benjojo.co.uk</email>
     </address>
   </author>
+  
+  <author fullname="Di Ma" initials="D." surname="Ma">
+    <organization>ZDNS</organization>
+    <address>
+      <postal>
+        <street>Floor 21, Block B, Greenland Center</street>
+        <city>Chaoyang</city>
+        <code>100102</code>
+        <region>Beijing</region>
+        <country>China</country>
+      </postal>
+      <email>madi@zdns.cn</email>
+    </address>
+  </author>
   <date />
 
   <area>RPKI</area>
@@ -139,11 +153,12 @@
     <section title="Validated ASPA Filters" anchor="aspaFilters">
       <t>
         The RP can configure zero or more Validated ASPA Filters ("ASPA Filters" for short.
-        Each ASPA Filter contains a single 'customer_asid', a single 'afi',  and optionally a single 'comment'.
+        Each ASPA Filter contains a single 'customerASID', a single 'afi', optionally a single 'providerASSet', and optionally a single 'comment'.
       </t>
       <ul>
-        <li>The 'customer_asid' member has as value a number.</li>
+        <li>The 'customerASID' member has as value a number.</li>
         <li>The 'afi' member has as value a string which is either "ipv4" or "ipv6".</li>
+        <li>The 'providerASSet' member has as value an array of numbers  representing Provider ASNs which are equal to or a subset of the listing of ASes that are authorized by the customer AS as providers.</li>
         <li>It is RECOMMENDED that an explanatory comment is included with each ASPA Filter so that it can be shown to users of the RP software.</li>
       </ul>
       <t>
@@ -153,7 +168,8 @@
         A VAP is considered to match with an ASPA Filter if the following condition applies:
       </t>
       <ol>
-        <li>The VAP is considered to match if the VAP Customer ASID is equal to the ASPA Filter Customer ASID.</li>
+        <li>If the ASPA Filter contains both Customer ASID and Afi , the VAP is considered to match if the VAP Customer ASID is equal to the ASPA Filter Customer ASID, and the VAP Afi is equal to the ASPA Filter Afi.</li>
+        <li>If the ASPA Filter contains both Customer ASID, Afi, and Provider ASNs, the VAP is considered to match if the VAP Customer ASID is equal to the ASPA Filter Customer ASID, and the VAP Afi is equal to the ASPA Filter Afi, and the VAP Provider ASNs belong to the ASPA Filter Provider ASNs.</li>
       </ol>
       <t>
         The following example JSON structure represents a "aspaFilters" member with one object as described above:
@@ -162,10 +178,21 @@
 <![CDATA[
 "aspaFilter": [
   {
-    "customerAsid": 64496,
+    "customerASID": 64496,
     "afi": "ipv6",
-    "prividerAsSet":[64495]
     "comment": "Ignore ASPA(s) that have 64496 as Customer ASID"
+  },
+  {
+    "customerASID": 64596,
+    "afi": "ipv4",
+    "providerASSet": [64597],
+    "comment": "Ignore ASPA(s) that have 64596 as Customer ASID, and have 64597 as Provider ASID"
+  },
+  {
+    "customerASID": 64696,
+    "afi": "ipv4",
+    "providerASSet": [64698, 64699],
+    "comment": "Ignore ASPA(s) that have 64696 as Customer ASID, and have 64698 or 64699 as Provider ASID"
   }
 ]
 ]]>
@@ -176,7 +203,7 @@
     <section title="Locally Added ASPA Assertions" anchor="aspaAssertions">
       <t>
         Each RP is locally configured with a (possibly empty) array of ASPA Assertions.
-        Each ASPA Assertion MUST contain a 'customer_asid' member containing the Customer ASID and a 'provider_set' array of numbers, reflecting the set of Provider ASNs.
+        Each ASPA Assertion MUST contain a 'customerASID' member containing the Customer ASID and a 'providerASSet' array of numbers, reflecting the set of Provider ASNs.
         It is RECOMMENDED that an explanatory comment is also included so that it can be shown to users of the RP software.
       </t>
       <t>
@@ -184,9 +211,9 @@
         Each object MUST contain one each of all of the following members:
       </t>
       <ul>
-        <li>An "customer_asid" member whose value is a number.</li>
+        <li>An "customerASID" member whose value is a number.</li>
         <li>An "afi" member whose value is a string, whose content is either "ipv4" or "ipv6".</li>
-        <li>A "provider_set" member whose value is an array of numbers.</li>
+        <li>A "providerASSet" member whose value is an array of numbers.</li>
         <li>An optional "comment" member whose value is a string.</li>
       </ul>
       <t>
@@ -196,9 +223,9 @@
 <![CDATA[
 "aspaAssertions": [
   {
-    "customerAsId": 64496,
+    "customerASID": 64496,
     "afi": "ipv6",
-    "providerAsSet": [64497, 64498],
+    "providerASSet": [64497, 64498],
     "comment": "pretend 64497 are 64498 are providers to 64496 for IPv6 routes"
   }
 ]
@@ -251,10 +278,21 @@
     ],
     "aspaFilters": [
       {
-        "customerAsId": 64496,
+        "customerASID": 64496,
         "afi": "ipv6",
-        "prividerAsSet":[64495]
         "comment": "ASPAs matching Customer ASID"
+      },
+      {
+        "customerASID": 64596,
+        "afi": "ipv4",
+        "providerASSet": [64597],
+        "comment": "ASPAs matching Customer ASID and Provider ASID"
+      },
+      {
+        "customerASID": 64696,
+        "afi": "ipv4",
+        "providerASSet": [64698,64699],
+        "comment": "ASPAs matching Customer ASID and Provider ASIDs"
       }
     ]
   },
@@ -282,9 +320,9 @@
     ],
     "aspaAssertions": [
       {
-        "customerAsId": 64496,
+        "customerASID": 64496,
         "afi": "ipv6",
-        "providerAsSet": [64497, 64498],
+        "providerASSet": [64497, 64498],
         "comment": "Pretend 64497 and 64498 are upstream for 64496 in the IPv6 AFI"
       }
     ]
