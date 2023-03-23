@@ -153,7 +153,7 @@
     <section title="Validated ASPA Filters" anchor="aspaFilters">
       <t>
         The RP can configure zero or more Validated ASPA Filters ("ASPA Filters" for short.
-        Each ASPA Filter contains a single customerASID, a single afi, optionally a single providerASSet, and optionally a single 'comment'.
+        Each ASPA Filter contains a single customerASID, a single afi, optionally a single providerASSet, and optionally a single comment.
       </t>
       <ul>
         <li>An customerASID member has as value a number.</li>
@@ -175,21 +175,21 @@
 <![CDATA[
 "aspaFilter": [
   {
-    customerASID: 64496,
-    afi: "ipv6",
-    comment: "Ignore ASPA(s) that have 64496 as Customer ASID"
+    "customerASID": 64496,
+    "afi": "ipv6",
+    "comment": "Ignore ASPA(s) that have 64496 as Customer ASID"
   },
   {
-    customerASID: 64596,
-    afi: "ipv4",
-    providerASSet: [64597],
-    comment: "Ignore ASPA(s) that have 64596 as Customer ASID, and have 64597 as Provider ASID"
+    "customerASID": 64596,
+    "afi": "ipv4",
+    "providerASSet": [64597],
+    "comment": "Ignore ASPA(s) that have 64596 as Customer ASID, and have 64597 as Provider ASID"
   },
   {
-    customerASID: 64696,
-    afi: "ipv4",
-    providerASSet: [64698, 64699],
-    comment: "Ignore ASPA(s) that have 64696 as Customer ASID, and have 64698 or 64699 as Provider ASID"
+    "customerASID": 64696,
+    "afi": "ipv4",
+    "providerASSet": [64698, 64699],
+    "comment": "Ignore ASPA(s) that have 64696 as Customer ASID, and have 64698 or 64699 as Provider ASID"
   }
 ]
 ]]>
@@ -222,10 +222,10 @@
 <![CDATA[
 "aspaAssertions": [
   {
-    customerASID: 64496,
-    afi: "ipv6",
-    providerASSet: [64497, 64498],
-    comment: "pretend 64497 are 64498 are providers to 64496 for IPv6 routes"
+    "customerASID": 64496,
+    "afi": "ipv6",
+    "providerASSet": [64497, 64498],
+    "comment": "pretend 64497 are 64498 are providers to 64496 for IPv6 routes"
   }
 ]
 ]]>
@@ -248,22 +248,22 @@
     "prefixFilters": [
       {
         "prefix": "192.0.2.0/24",
-        comment: "All VRPs encompassed by prefix"
+        "comment": "All VRPs encompassed by prefix"
       },
       {
         "asn": 64496,
-        comment: "All VRPs matching ASN"
+        "comment": "All VRPs matching ASN"
       },
       {
         "prefix": "198.51.100.0/24",
         "asn": 64497,
-        comment: "All VRPs encompassed by prefix, matching ASN"
+        "comment": "All VRPs encompassed by prefix, matching ASN"
       }
     ],
     "bgpsecFilters": [
       {
         "asn": 64496,
-        comment: "All keys for ASN"
+        "comment": "All keys for ASN"
       },
       {
         "SKI": "voibVdC3Nzl9dcSfSFuFj6mK0R8",
@@ -272,26 +272,26 @@
       {
         "asn": 64497,
         "SKI": "UQ9IXSminbe1FfnEePjtPLeqfSM",
-        comment: "Key for ASN 64497 matching Router SKI"
+        "comment": "Key for ASN 64497 matching Router SKI"
       }
     ],
     "aspaFilters": [
       {
-        customerASID: 64496,
-        afi: "ipv6",
-        comment: "ASPAs matching Customer ASID"
+        "customerASID": 64496,
+        "afi": "ipv6",
+        "comment": "ASPAs matching Customer ASID"
       },
       {
-        customerASID: 64596,
-        afi: "ipv4",
-        providerASSet: [64597],
-        comment: "ASPAs matching Customer ASID and Provider ASID"
+        "customerASID": 64596,
+        "afi": "ipv4",
+        "providerASSet": [64597],
+        "comment": "ASPAs matching Customer ASID and Provider ASID"
       },
       {
-        customerASID: 64696,
-        afi: "ipv4",
-        providerASSet: [64698,64699],
-        comment: "ASPAs matching Customer ASID and Provider ASIDs"
+        "customerASID": 64696,
+        "afi": "ipv4",
+        "providerASSet": [64698,64699],
+        "comment": "ASPAs matching Customer ASID and Provider ASIDs"
       }
     ]
   },
@@ -300,29 +300,29 @@
       {
         "asn": 64496,
         "prefix": "198.51.100.0/24",
-        comment: "My other important route"
+        "comment": "My other important route"
       },
       {
         "asn": 64496,
         "prefix": "2001:db8::/32",
         "maxPrefixLength": 48,
-        comment: "My other important de-aggregated routes"
+        "comment": "My other important de-aggregated routes"
       }
     ],
     "bgpsecAssertions": [
       {
         "asn": 64496,
-        comment : "My known key for my important ASN",
+        "comment": "My known key for my important ASN",
         "SKI": "XUJQ4tgdREjYop786R0p/wdeyeI",
         "routerPublicKey": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEgFcjQ/g//LAQerAH2Mpp+GucoDAGBbhIqD33wNPsXxnAGb+mtZ7XQrVO9DQ6UlAShtig5+QfEKpTtFgiqfiAFQ"
       }
     ],
     "aspaAssertions": [
       {
-        customerASID: 64496,
-        afi: "ipv6",
-        providerASSet: [64497, 64498],
-        comment: "Pretend 64497 and 64498 are upstream for 64496 in the IPv6 AFI"
+        "customerASID": 64496,
+        "afi": "ipv6",
+        "providerASSet": [64497, 64498],
+        "comment": "Pretend 64497 and 64498 are upstream for 64496 in the IPv6 AFI"
       }
     ]
   }
