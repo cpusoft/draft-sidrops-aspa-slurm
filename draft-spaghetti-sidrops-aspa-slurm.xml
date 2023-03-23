@@ -204,7 +204,8 @@
         It is RECOMMENDED that an explanatory comment is also included so that it can be shown to users of the RP software.
       </t>
       <t>
-        The above is expressed as a value of the aspaAssertions member, as an array of zero or more objects. Each object MUST contain one each of all of the following members:
+        The above is expressed as a value of the aspaAssertions member, as an array of zero or more objects. 
+        Each object MUST contain one each of all of the following members:
       </t>
       <ul>
         <li>An customerASID member whose value is a number.</li>
@@ -267,7 +268,7 @@
       },
       {
         "SKI": "voibVdC3Nzl9dcSfSFuFj6mK0R8",
-        comment: "Key matching Router SKI"
+        "comment": "Key matching Router SKI"
       },
       {
         "asn": 64497,
