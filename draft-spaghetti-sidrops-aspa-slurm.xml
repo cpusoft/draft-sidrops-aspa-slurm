@@ -153,23 +153,20 @@
     <section title="Validated ASPA Filters" anchor="aspaFilters">
       <t>
         The RP can configure zero or more Validated ASPA Filters ("ASPA Filters" for short.
-        Each ASPA Filter contains a single 'customerASID', a single 'afi', optionally a single 'providerASSet', and optionally a single 'comment'.
+        Each ASPA Filter contains a single customerASID, a single afi, optionally a single providerASSet, and optionally a single 'comment'.
       </t>
       <ul>
-        <li>The 'customerASID' member has as value a number.</li>
-        <li>The 'afi' member has as value a string which is either "ipv4" or "ipv6".</li>
-        <li>The 'providerASSet' member has as value an array of numbers  representing Provider ASNs which are equal to or a subset of the listing of ASes that are authorized by the customer AS as providers.</li>
-        <li>It is RECOMMENDED that an explanatory comment is included with each ASPA Filter so that it can be shown to users of the RP software.</li>
+        <li>An customerASID member has as value a number.</li>
+        <li>An afi member has as value a string which is either "ipv4" or "ipv6".</li>
+        <li>An optional providerASSet member has as value an array of numbers.</li>
+        <li>An optional comment member has as value a string. It is RECOMMENDED that an explanatory comment is included with each ASPA Filter so that it can be shown to users of the RP software.</li>
       </ul>
       <t>
-        Any Validated ASPA Payload (VAP) <xref target="I-D.ietf-sidrops-aspa-profile"/> that matches any configured ASPA Filter MUST be removed from the RP's output.
-      </t>
-      <t>
-        A VAP is considered to match with an ASPA Filter if the following condition applies:
+        Any Validated ASPA Payload (VAP) <xref target="I-D.ietf-sidrops-aspa-profile"/>  MUST be tailored as RP's output if it is considered to match with an ASPA Filter as the following condition applies:
       </t>
       <ol>
-        <li>If the ASPA Filter contains both Customer ASID and Afi , the VAP is considered to match if the VAP Customer ASID is equal to the ASPA Filter Customer ASID, and the VAP Afi is equal to the ASPA Filter Afi.</li>
-        <li>If the ASPA Filter contains both Customer ASID, Afi, and Provider ASNs, the VAP is considered to match if the VAP Customer ASID is equal to the ASPA Filter Customer ASID, and the VAP Afi is equal to the ASPA Filter Afi, and the VAP Provider ASNs belong to the ASPA Filter Provider ASNs.</li>
+        <li>When providerASSet member absent, the VAP MUST be removed if the VAP Customer ASID is equal to the ASPA Filter Customer ASID.</li>
+        <li>When providerASSet member present, ASN(s) expressed in the very providerASSet MUST be removed from a VAP Provider ASNs if both a VAP Customer ASID is equal to the ASPA Filter customerASID member and the very providerASSet is a subset of this VAP Provider ASNs.</li>
       </ol>
       <t>
         The following example JSON structure represents a "aspaFilters" member with one object as described above:
@@ -178,21 +175,21 @@
 <![CDATA[
 "aspaFilter": [
   {
-    "customerASID": 64496,
-    "afi": "ipv6",
-    "comment": "Ignore ASPA(s) that have 64496 as Customer ASID"
+    customerASID: 64496,
+    afi: "ipv6",
+    comment: "Ignore ASPA(s) that have 64496 as Customer ASID"
   },
   {
-    "customerASID": 64596,
-    "afi": "ipv4",
-    "providerASSet": [64597],
-    "comment": "Ignore ASPA(s) that have 64596 as Customer ASID, and have 64597 as Provider ASID"
+    customerASID: 64596,
+    afi: "ipv4",
+    providerASSet: [64597],
+    comment: "Ignore ASPA(s) that have 64596 as Customer ASID, and have 64597 as Provider ASID"
   },
   {
-    "customerASID": 64696,
-    "afi": "ipv4",
-    "providerASSet": [64698, 64699],
-    "comment": "Ignore ASPA(s) that have 64696 as Customer ASID, and have 64698 or 64699 as Provider ASID"
+    customerASID: 64696,
+    afi: "ipv4",
+    providerASSet: [64698, 64699],
+    comment: "Ignore ASPA(s) that have 64696 as Customer ASID, and have 64698 or 64699 as Provider ASID"
   }
 ]
 ]]>
@@ -203,19 +200,21 @@
     <section title="Locally Added ASPA Assertions" anchor="aspaAssertions">
       <t>
         Each RP is locally configured with a (possibly empty) array of ASPA Assertions.
-        Each ASPA Assertion MUST contain a 'customerASID' member containing the Customer ASID and a 'providerASSet' array of numbers, reflecting the set of Provider ASNs.
+        Each ASPA Assertion MUST contain a customerASID member containing the Customer ASID and a providerASSet array of numbers, reflecting the set of Provider ASNs.
         It is RECOMMENDED that an explanatory comment is also included so that it can be shown to users of the RP software.
       </t>
       <t>
-        The above is expressed as a value of the "aspaAssertions" member, as an array of zero or more objects.
-        Each object MUST contain one each of all of the following members:
+        The above is expressed as a value of the aspaAssertions member, as an array of zero or more objects. Each object MUST contain one each of all of the following members:
       </t>
       <ul>
-        <li>An "customerASID" member whose value is a number.</li>
-        <li>An "afi" member whose value is a string, whose content is either "ipv4" or "ipv6".</li>
-        <li>A "providerASSet" member whose value is an array of numbers.</li>
-        <li>An optional "comment" member whose value is a string.</li>
+        <li>An customerASID member whose value is a number.</li>
+        <li>An afi member whose value is a string, whose content is either "ipv4" or "ipv6".</li>
+        <li>A providerASSet member whose value is an array of numbers.</li>
+        <li>An optional comment member whose value is a string.</li>
       </ul>
+      <t>
+        ASN(s) expressed in the providerASSet member of an Locally Added ASPA Assertion MUST be merged into VAP Provider ASNs as RP's output if the customerASID member of this ASPA Assertion is equal to an existing VAP Customer ASID.
+      </t>
       <t>
         The following example JSON structure represents a "aspaAssertions" member with one object as described above:
       </t>
@@ -223,10 +222,10 @@
 <![CDATA[
 "aspaAssertions": [
   {
-    "customerASID": 64496,
-    "afi": "ipv6",
-    "providerASSet": [64497, 64498],
-    "comment": "pretend 64497 are 64498 are providers to 64496 for IPv6 routes"
+    customerASID: 64496,
+    afi: "ipv6",
+    providerASSet: [64497, 64498],
+    comment: "pretend 64497 are 64498 are providers to 64496 for IPv6 routes"
   }
 ]
 ]]>
@@ -249,50 +248,50 @@
     "prefixFilters": [
       {
         "prefix": "192.0.2.0/24",
-        "comment": "All VRPs encompassed by prefix"
+        comment: "All VRPs encompassed by prefix"
       },
       {
         "asn": 64496,
-        "comment": "All VRPs matching ASN"
+        comment: "All VRPs matching ASN"
       },
       {
         "prefix": "198.51.100.0/24",
         "asn": 64497,
-        "comment": "All VRPs encompassed by prefix, matching ASN"
+        comment: "All VRPs encompassed by prefix, matching ASN"
       }
     ],
     "bgpsecFilters": [
       {
         "asn": 64496,
-        "comment": "All keys for ASN"
+        comment: "All keys for ASN"
       },
       {
         "SKI": "voibVdC3Nzl9dcSfSFuFj6mK0R8",
-        "comment": "Key matching Router SKI"
+        comment: "Key matching Router SKI"
       },
       {
         "asn": 64497,
         "SKI": "UQ9IXSminbe1FfnEePjtPLeqfSM",
-        "comment": "Key for ASN 64497 matching Router SKI"
+        comment: "Key for ASN 64497 matching Router SKI"
       }
     ],
     "aspaFilters": [
       {
-        "customerASID": 64496,
-        "afi": "ipv6",
-        "comment": "ASPAs matching Customer ASID"
+        customerASID: 64496,
+        afi: "ipv6",
+        comment: "ASPAs matching Customer ASID"
       },
       {
-        "customerASID": 64596,
-        "afi": "ipv4",
-        "providerASSet": [64597],
-        "comment": "ASPAs matching Customer ASID and Provider ASID"
+        customerASID: 64596,
+        afi: "ipv4",
+        providerASSet: [64597],
+        comment: "ASPAs matching Customer ASID and Provider ASID"
       },
       {
-        "customerASID": 64696,
-        "afi": "ipv4",
-        "providerASSet": [64698,64699],
-        "comment": "ASPAs matching Customer ASID and Provider ASIDs"
+        customerASID: 64696,
+        afi: "ipv4",
+        providerASSet: [64698,64699],
+        comment: "ASPAs matching Customer ASID and Provider ASIDs"
       }
     ]
   },
@@ -301,29 +300,29 @@
       {
         "asn": 64496,
         "prefix": "198.51.100.0/24",
-        "comment": "My other important route"
+        comment: "My other important route"
       },
       {
         "asn": 64496,
         "prefix": "2001:db8::/32",
         "maxPrefixLength": 48,
-        "comment": "My other important de-aggregated routes"
+        comment: "My other important de-aggregated routes"
       }
     ],
     "bgpsecAssertions": [
       {
         "asn": 64496,
-        "comment" : "My known key for my important ASN",
+        comment : "My known key for my important ASN",
         "SKI": "XUJQ4tgdREjYop786R0p/wdeyeI",
         "routerPublicKey": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEgFcjQ/g//LAQerAH2Mpp+GucoDAGBbhIqD33wNPsXxnAGb+mtZ7XQrVO9DQ6UlAShtig5+QfEKpTtFgiqfiAFQ"
       }
     ],
     "aspaAssertions": [
       {
-        "customerASID": 64496,
-        "afi": "ipv6",
-        "providerASSet": [64497, 64498],
-        "comment": "Pretend 64497 and 64498 are upstream for 64496 in the IPv6 AFI"
+        customerASID: 64496,
+        afi: "ipv6",
+        providerASSet: [64497, 64498],
+        comment: "Pretend 64497 and 64498 are upstream for 64496 in the IPv6 AFI"
       }
     ]
   }
